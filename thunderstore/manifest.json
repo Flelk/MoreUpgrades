@@ -1,0 +1,9 @@
+{
+  "name": "MoreUpgrades",
+  "version_number": "1.0.0",
+  "website_url": "",
+  "description": "Shop rolls 33% more upgrades (4 instead of 3), favoring Strength, Health and Stamina. Host-side; configurable.",
+  "dependencies": [
+    "BepInEx-BepInExPack-5.4.2305"
+  ]
+}
