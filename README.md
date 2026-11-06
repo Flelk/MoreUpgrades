@@ -6,7 +6,7 @@ Player docs: [thunderstore/README.md](thunderstore/README.md).
 ## How it works
 `src/ShopPatches.cs`:
 - Postfix on `ShopManager.GetAllItemsFromStatsManager`: weighted shuffle of `potentialItemUpgrades` so favored upgrades end up near the end (the shop picks from the end).
-- Prefix on `PunManager.ShopPopulateItemVolumes`: raises `itemUpgradesAmount` (3 → 4 by default). If the shop has fewer upgrade slots than that, it turns spare small-item slots into upgrade slots.
+- Prefix on `PunManager.ShopPopulateItemVolumes`: rolls `itemUpgradesAmount` (10 to 25 by default; the game's shop uses 10) and adds a random bonus to the regular item, power crystal and health pack targets. If the shop has fewer upgrade slots than that, it turns spare small-item slots into upgrade slots.
 
 ## Build
 `.\build.ps1` → `dist\MoreUpgrades-<version>.zip`. `build.cmd` also installs it into your r2modman profile.
