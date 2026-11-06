@@ -2,6 +2,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using UnityEngine;
 
 namespace MoreUpgrades;
 
@@ -17,6 +18,10 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<string> Favored;
     internal static ConfigEntry<float> FavoredWeight;
     internal static ConfigEntry<int> ExtraShelfLevels;
+    internal static ConfigEntry<bool> SortUpgradesByColor;
+    internal static ConfigEntry<bool> DiscountOdds;
+    internal static ConfigEntry<bool> SetPrices;
+    internal static ConfigEntry<bool> StrengthHotkeysEnabled;
 
     private void Awake()
     {
@@ -51,9 +56,29 @@ public class Plugin : BaseUnityPlugin
                                   "0 = game default. Everyone in the lobby needs the same value, or upgrades look like they float.",
                                   new AcceptableValueRange<int>(0, 2)));
 
+        SortUpgradesByColor = Config.Bind("Shop", "SortUpgradesByColor", true,
+            "Arrange the upgrade stand by color from the bottom row up, including after a reroll. Only the host's setting matters.");
+
+        DiscountOdds = Config.Bind("Shop", "ShopkeeperDiscountOdds", true,
+            "Shopkeeper scans pass at 100%, then 50%, then 33% as it gives discounts, and never after the third. " +
+            "Failed scans don't change the odds. False = game default. Only the host's setting matters.");
+        SetPrices = Config.Bind("Shop", "SetPrices", true,
+            "Every shop item has one set price that never goes up: the middle of its normal price range. " +
+            "Bigger lobbies still get the game's discount. False = game default. Only the host's setting matters.");
+        StrengthHotkeysEnabled = Config.Bind("Cheats", "StrengthHotkeys", true,
+            "F8 adds 10 Grab Strength levels and F9 removes 10. Host or solo only. Changes are kept in your save.");
+
+        var hotkeys = new GameObject("MoreUpgrades Hotkeys");
+        hotkeys.hideFlags = HideFlags.HideAndDontSave;
+        DontDestroyOnLoad(hotkeys);
+        hotkeys.AddComponent<StrengthHotkeys>();
+
         var harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
         harmony.PatchAll(typeof(ShopPatches));
         harmony.PatchAll(typeof(ShelfPatches));
+        harmony.PatchAll(typeof(ShelfLayout));
+        harmony.PatchAll(typeof(PricePatches));
+        harmony.PatchAll(typeof(DiscountPatches));
         Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} {MyPluginInfo.PLUGIN_VERSION} loaded.");
     }
 }

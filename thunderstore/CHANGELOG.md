@@ -2,7 +2,11 @@
 
 ## 1.2.0
 - The upgrade shelf is about twice as tall, with 42 slots instead of 14 (`ExtraShelfLevels`). Everyone in the lobby needs this version to see the new shelf.
-- Rerolling only changes upgrades on the original two rows.
+- Upgrades are arranged by color from the bottom row up, including after a reroll (`SortUpgradesByColor`).
+- Shopkeeper scans pass at 100%, then 50%, then 33% as it gives discounts, and never after the third (`ShopkeeperDiscountOdds`). Failed scans don't change the odds.
+- Every shop item has one set price that never goes up (`SetPrices`).
+- F8 adds 10 Grab Strength levels and F9 removes 10, for the host or solo (`StrengthHotkeys`).
+- Rerolling changes the upgrades on every row. The new rows have no hatch, so their upgrades swap in the open.
 
 ## 1.1.0
 - Fix: 1.0.0 lowered the shop to 4 upgrades. The game's real limit is 10, not 3.

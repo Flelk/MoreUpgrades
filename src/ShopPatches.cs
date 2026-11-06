@@ -127,5 +127,7 @@ internal static class ShopPatches
 
         Plugin.Log.LogInfo($"Shop: rolled {target} upgrades (game default {baseUpgrades}), {shop.potentialItemUpgrades.Count} candidates, " +
                            $"{upgradeSlots} upgrade slots" + (borrowed > 0 ? $" + {borrowed} borrowed" : "") + ".");
+
+        ShelfLayout.ArrangeForShop(shop);
     }
 }

@@ -22,15 +22,20 @@ internal static class ShelfPatches
     [HarmonyPatch(typeof(ShopManager), nameof(ShopManager.ShopInitialize), typeof(List<PunManager.ItemSpawn>))]
     private static void ExtendStands()
     {
+        if (!SemiFunc.RunIsShop()) return;
         int levels = Plugin.ExtraShelfLevels.Value;
-        if (levels <= 0 || !SemiFunc.RunIsShop()) return;
+        ShelfLayout.Clear();
 
         // A failure here must not stop the shop from stocking.
         try
         {
             var stands = UnityEngine.Object.FindObjectsByType<UpgradeStand>(FindObjectsSortMode.None);
             if (stands.Length == 0) Plugin.Log.LogWarning("Shelf: no upgrade stand in this shop.");
-            foreach (var stand in stands) Extend(stand, levels);
+            foreach (var stand in stands)
+            {
+                float height = levels > 0 ? Extend(stand, levels) : 0f;
+                if (!SemiFunc.IsNotMasterClient()) ShelfLayout.Capture(stand, height);
+            }
         }
         catch (Exception e)
         {
@@ -38,10 +43,11 @@ internal static class ShelfPatches
         }
     }
 
-    private static void Extend(UpgradeStand stand, int levels)
+    /// <returns>How much taller the stand got.</returns>
+    private static float Extend(UpgradeStand stand, int levels)
     {
         Transform root = stand.transform;
-        if (root.Find(Marker)) return;
+        if (root.Find(Marker)) return 0f;
 
         MeshFilter shelf = stand.upgradeCompartment.GetComponentsInChildren<MeshFilter>(true)
             .FirstOrDefault(m => m.sharedMesh && m.sharedMesh.name.IndexOf("Shelf", StringComparison.OrdinalIgnoreCase) >= 0);
@@ -50,7 +56,7 @@ internal static class ShelfPatches
         if (!shelf || !divider || !top || !back || !left || !right)
         {
             Plugin.Log.LogWarning("Shelf: the upgrade stand's layout has changed, leaving it alone.");
-            return;
+            return 0f;
         }
 
         float step = shelf.sharedMesh.bounds.size.y * shelf.transform.lossyScale.y;
@@ -74,9 +80,24 @@ internal static class ShelfPatches
         CopyCollider(left, holder, middle, height);
         CopyCollider(right, holder, middle, height);
 
+        // Rerolling swaps whatever upgrades are inside this box (position + localScale), so stretch it over the new rows.
+        Transform rerollBox = stand.upgradeInsideBoxCheck;
+        rerollBox.position += Vector3.up * (height / 2f);
+        rerollBox.localScale += Vector3.up * height;
+
         int slots = SemiFunc.IsNotMasterClient() ? 0 : AddSlots(root, step, levels);
         Plugin.Log.LogInfo($"Shelf: added {levels} level(s), {height:0.00}m taller, {slots} new upgrade slots" +
                            (SemiFunc.IsNotMasterClient() ? " (slots are handled by the host)." : "."));
+        return height;
+    }
+
+    /// <summary>Slots sit in a shared list on the shop module, so this picks out the ones inside this stand's shelf.</summary>
+    internal static bool IsStandSlot(Transform root, ItemVolume volume, float extraHeight)
+    {
+        if (volume.itemVolume != SemiFunc.itemVolume.upgrade) return false;
+        if (volume.itemSecretShopType != SemiFunc.itemSecretShopType.none) return false;
+        Vector3 local = root.InverseTransformPoint(volume.transform.position);
+        return Mathf.Abs(local.x) <= 1f && local.y >= 0.9f && local.y <= 1.8f + extraHeight && local.z >= -0.2f && local.z <= 0.9f;
     }
 
     private static void CopyCollider(Transform source, Transform parent, float y, float height = -1f)
@@ -96,12 +117,7 @@ internal static class ShelfPatches
         int added = 0;
         foreach (var volume in UnityEngine.Object.FindObjectsByType<ItemVolume>(FindObjectsSortMode.None))
         {
-            if (volume.itemVolume != SemiFunc.itemVolume.upgrade) continue;
-            if (volume.itemSecretShopType != SemiFunc.itemSecretShopType.none) continue;
-
-            // The slots sit in a shared list on the module, so pick out the ones inside this stand's shelf.
-            Vector3 local = root.InverseTransformPoint(volume.transform.position);
-            if (Mathf.Abs(local.x) > 1f || local.y < 0.9f || local.y > 1.8f || local.z < -0.2f || local.z > 0.9f) continue;
+            if (!IsStandSlot(root, volume, 0f)) continue;
 
             Transform t = volume.transform;
             for (int level = 1; level <= levels; level++)
