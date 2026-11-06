@@ -1,8 +1,8 @@
 {
   "name": "MoreUpgrades",
-  "version_number": "1.1.0",
+  "version_number": "1.2.0",
   "website_url": "",
-  "description": "Shop rolls 10 to 25 upgrades, stocks more of everything else, and favors Strength, Range, Health and Stamina. Host-side; configurable.",
+  "description": "Shop rolls 10 to 25 upgrades on a taller upgrade shelf, stocks more of everything else, and favors Strength, Range, Health and Stamina. Configurable.",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2305"
   ]

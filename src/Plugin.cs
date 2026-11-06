@@ -16,6 +16,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<int> ExtraItemsMax;
     internal static ConfigEntry<string> Favored;
     internal static ConfigEntry<float> FavoredWeight;
+    internal static ConfigEntry<int> ExtraShelfLevels;
 
     private void Awake()
     {
@@ -45,7 +46,14 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription("How much likelier a favored upgrade is to be picked than any other (1 = vanilla odds).",
                                   new AcceptableValueRange<float>(1f, 20f)));
 
-        new Harmony(MyPluginInfo.PLUGIN_GUID).PatchAll(typeof(ShopPatches));
+        ExtraShelfLevels = Config.Bind("Shop", "ExtraShelfLevels", 2,
+            new ConfigDescription("Levels stacked on the upgrade stand. Each adds two rows of 7 slots and about 0.85m; 2 roughly doubles its height. " +
+                                  "0 = game default. Everyone in the lobby needs the same value, or upgrades look like they float.",
+                                  new AcceptableValueRange<int>(0, 2)));
+
+        var harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
+        harmony.PatchAll(typeof(ShopPatches));
+        harmony.PatchAll(typeof(ShelfPatches));
         Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} {MyPluginInfo.PLUGIN_VERSION} loaded.");
     }
 }
