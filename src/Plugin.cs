@@ -12,6 +12,8 @@ public class Plugin : BaseUnityPlugin
     internal static ManualLogSource Log;
     internal static ConfigEntry<int> MinUpgrades;
     internal static ConfigEntry<int> MaxUpgrades;
+    internal static ConfigEntry<bool> EvenUpgrades, FillUpgradeStand;
+    internal static ConfigEntry<int> ExtraHealthUpgrades;
     internal static ConfigEntry<bool> GuaranteeFavored;
     internal static ConfigEntry<int> ExtraItemsMin;
     internal static ConfigEntry<int> ExtraItemsMax;
@@ -43,6 +45,12 @@ public class Plugin : BaseUnityPlugin
         GuaranteeFavored = Config.Bind("Shop", "GuaranteeFavored", true,
             "Stock one of each favored upgrade whenever the shop rolled it as available. " +
             "The game mostly skips upgrades the team can't afford, so a favored upgrade can still be missing.");
+        EvenUpgrades = Config.Bind("Shop", "EvenUpgrades", true,
+            "Give every upgrade type about the same number of slots. Replaces PreferredUpgrades and the game's per-type shop limits. Host only.");
+        FillUpgradeStand = Config.Bind("Shop", "FillUpgradeStand", true,
+            "Fill every slot on the upgrade stand. Replaces MinUpgrades and MaxUpgrades. Host only.");
+        ExtraHealthUpgrades = Config.Bind("Shop", "ExtraHealthUpgrades", 2,
+            new ConfigDescription("Extra Health upgrades on top of the even share, with EvenUpgrades on. Host only.", new AcceptableValueRange<int>(0, 20)));
         Favored = Config.Bind("Shop", "PreferredUpgrades", "Grab Strength, Grab Range, Health, Energy",
             "Comma-separated upgrades that show up more often (matched against the item name, e.g. " +
             "Grab Strength, Health, Energy (stamina), Sprint Speed, Extra Jump, Grab Range, Grab Throw, " +

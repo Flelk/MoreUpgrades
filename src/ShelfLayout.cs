@@ -49,6 +49,8 @@ internal static class ShelfLayout
 
     internal static void Clear() => standRows.Clear();
 
+    internal static int Capacity => standRows.Values.Sum(rows => rows.Sum(row => row.Count));
+
     /// <summary>Saves the stand's slots as rows: bottom row first, each one left to right when facing the stand.</summary>
     internal static void Capture(UpgradeStand stand, float extraHeight)
     {
@@ -149,7 +151,8 @@ internal static class ShelfLayout
             var displayed = __instance.GetCurrentlyDisplayedUpgradeCounts(cached.Select(c => c.instanceID).ToList());
             var selected = new Dictionary<string, int>();
             var picks = new List<Item>();
-            foreach (var old in cached)
+            if (Plugin.EvenUpgrades.Value) picks = EvenStock.Build(cached.Count);
+            else foreach (var old in cached)
             {
                 Item pick = __instance.GetWeightedUpgradeExcluding(old.itemData, displayed, selected);
                 if (!pick) continue;

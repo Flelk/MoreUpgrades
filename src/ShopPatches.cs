@@ -96,8 +96,17 @@ internal static class ShopPatches
         baseItems ??= shop.itemSpawnTargetAmount;
         baseHealthPacks ??= shop.itemHealthPacksAmount;
 
-        int target = RollTarget();
+        int capacity = ShelfLayout.Capacity;
+        int target = Plugin.FillUpgradeStand.Value && capacity > 0 ? capacity : RollTarget();
         shop.itemUpgradesAmount = target;
+
+        if (Plugin.EvenUpgrades.Value)
+        {
+            shop.potentialItemUpgrades.Clear();
+            shop.potentialItemUpgrades.AddRange(EvenStock.Build(target));
+            Plugin.Log.LogInfo("Shop: even stock: " + string.Join(", ", shop.potentialItemUpgrades
+                .GroupBy(i => i.name).OrderBy(g => g.Key).Select(g => $"{g.Key.Replace("Item Upgrade ", "")} x{g.Count()}")));
+        }
 
         shop.itemSpawnTargetAmount = baseItems.Value + RollExtra();
         shop.itemHealthPacksAmount = baseHealthPacks.Value + RollExtra();

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.0
+- The upgrade stand is now filled completely and evenly, with 2 extra Health. Turn this off with EvenUpgrades and FillUpgradeStand.
+
 ## 2.0.0
 - Removed personal info from the mod's files. The settings file is now flelk.moreupgrades.cfg, so settings go back to their defaults.
 

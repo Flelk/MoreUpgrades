@@ -2,11 +2,11 @@
 
 The shop between levels stocks **more upgrades**, and favors the ones you want.
 
-- **More upgrades**: each shop rolls 10 to 25 (configurable, up to 50). It stocks fewer if it runs out of room or available upgrades, and extra upgrades take over small-item spots.
+- **A full, even shelf**: every slot on the upgrade stand is filled, with about the same number of each upgrade and 2 extra Health. Upgrades that have hit their purchase limit are left out.
 - **More of everything else**: regular items, power crystals and health packs each get 5 to 10 more, up to what the shelves can hold.
 - **Taller upgrade shelf**: the upgrade stand is about twice as tall, with 42 slots instead of 14. Rerolling changes every row.
 - **Sorted by color**: upgrades fill the stand from the bottom row up, grouped by color, so the top rows are only used when a shop rolls a lot of them.
-- **Favored upgrades**: one each of Grab Strength, Grab Range, Health and Energy (stamina) is stocked whenever the shop rolled it as available. Beyond that, favored upgrades are 6x as likely to be picked.
+- **Favored upgrades (with EvenUpgrades off)**: one each of Grab Strength, Grab Range, Health and Energy (stamina) is stocked whenever the shop rolled it as available. Beyond that, favored upgrades are 6x as likely to be picked.
 - **Shopkeeper discounts**: scanning an item passes at 100%, then 50%, then 33% as the shopkeeper gives discounts in that shop, and never after the third. Failed scans don't change the odds, and there's no limit on tries before then.
 - **Set prices**: every item costs the middle of its normal price range, and prices never go up. Bigger lobbies still get the game's discount.
 - **Strength hotkeys**: F8 adds 10 Grab Strength levels and F9 removes 10, for the host or solo. Changes are kept in your save.
@@ -18,6 +18,9 @@ The shop between levels stocks **more upgrades**, and favors the ones you want.
 ## Config (`flelk.moreupgrades.cfg`, or r2modman's Config editor)
 | Setting | Default | |
 | --- | --- | --- |
+| EvenUpgrades | true | about the same number of each upgrade |
+| FillUpgradeStand | true | fill every slot on the stand, instead of rolling MinUpgrades to MaxUpgrades |
+| ExtraHealthUpgrades | 2 | extra Health upgrades with EvenUpgrades on |
 | MinUpgrades | 10 | lowest number a shop can roll (1 to 50) |
 | MaxUpgrades | 25 | highest number a shop can roll (1 to 50) |
 | ExtraItemsMin | 5 | lowest bonus for other items (0 and 0 = game default) |
