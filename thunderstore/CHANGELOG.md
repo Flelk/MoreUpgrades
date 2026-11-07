@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0
+- Removed personal info from the mod's files. The settings file is now flelk.moreupgrades.cfg, so settings go back to their defaults.
+
 ## 1.2.0
 - The upgrade shelf is about twice as tall, with 42 slots instead of 14 (`ExtraShelfLevels`). Everyone in the lobby needs this version to see the new shelf.
 - Upgrades are arranged by color from the bottom row up, including after a reroll (`SortUpgradesByColor`).

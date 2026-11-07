@@ -15,7 +15,7 @@ The shop between levels stocks **more upgrades**, and favors the ones you want.
 ## Who needs it
 **The host** (or you, solo) rolls the shop, so the host has to install it. **Everyone else** should install it too: without it, upgrades on the new rows look like they're floating. To play with people who don't have it, the host can set `ExtraShelfLevels` to 0.
 
-## Config (`gabe.moreupgrades.cfg`, or r2modman's Config editor)
+## Config (`flelk.moreupgrades.cfg`, or r2modman's Config editor)
 | Setting | Default | |
 | --- | --- | --- |
 | MinUpgrades | 10 | lowest number a shop can roll (1 to 50) |
